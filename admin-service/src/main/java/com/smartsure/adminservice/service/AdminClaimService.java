@@ -1,7 +1,8 @@
-package com.smartsure.admin.service;
+package com.smartsure.adminservice.service;
 
-import com.smartsure.admin.client.ClaimsClient;
-import com.smartsure.admin.dto.ClaimReviewRequest;
+import com.smartsure.adminservice.client.ClaimsClient;
+import com.smartsure.adminservice.dto.ClaimReviewRequest;
+import com.smartsure.adminservice.dto.ClaimResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +12,7 @@ public class AdminClaimService {
 
     private final ClaimsClient claimsClient;
 
-    public String reviewClaim(Long claimId, ClaimReviewRequest request) {
+    public ClaimResponse reviewClaim(Long claimId, ClaimReviewRequest request) {
         return claimsClient.reviewClaim(claimId, request);
     }
 }

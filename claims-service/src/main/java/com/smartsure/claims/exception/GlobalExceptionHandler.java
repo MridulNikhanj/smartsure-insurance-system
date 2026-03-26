@@ -1,4 +1,4 @@
-package com.smartsure.policy.exception;
+package com.smartsure.claims.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,19 +11,19 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(PolicyNotFoundException.class)
-    public ResponseEntity<String> handlePolicyNotFound(PolicyNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-    }
-
-    @ExceptionHandler(PolicyTypeNotFoundException.class)
-    public ResponseEntity<String> handlePolicyTypeNotFound(PolicyTypeNotFoundException ex) {
+    @ExceptionHandler(ClaimNotFoundException.class)
+    public ResponseEntity<String> handleClaimNotFound(ClaimNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
     @ExceptionHandler(UnauthorizedAccessException.class)
     public ResponseEntity<String> handleUnauthorized(UnauthorizedAccessException ex) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(InvalidFileTypeException.class)
+    public ResponseEntity<String> handleInvalidFile(InvalidFileTypeException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 
     @ExceptionHandler(IllegalStateException.class)

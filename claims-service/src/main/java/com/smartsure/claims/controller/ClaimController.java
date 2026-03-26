@@ -1,9 +1,8 @@
 package com.smartsure.claims.controller;
 
-import com.smartsure.claims.dto.ClaimRequest;
-import com.smartsure.claims.dto.ClaimResponse;
-import com.smartsure.claims.entity.Claim;
+import com.smartsure.claims.dto.*;
 import com.smartsure.claims.service.ClaimService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -19,28 +18,28 @@ public class ClaimController {
 
     private final ClaimService claimService;
 
-    // ✅ Upload document
+    // ── Customer endpoints ──────────────────────────────────────────────────
+
     @PostMapping("/upload")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public String uploadFile(@RequestParam("file") MultipartFile file) throws Exception {
+    public DocumentUploadResponse uploadFile(
+            @RequestParam("file") MultipartFile file) throws Exception {
         return claimService.uploadDocument(file);
     }
 
-    // ✅ Initiate claim
     @PostMapping("/initiate")
     @PreAuthorize("hasRole('CUSTOMER')")
     public ClaimResponse initiateClaim(
             Authentication authentication,
-            @RequestBody ClaimRequest request) {
+            @Valid @RequestBody ClaimRequest request) {
 
         Long userId = Long.parseLong(authentication.getName());
         return claimService.initiateClaim(userId, request);
     }
 
-    // ✅ Get single claim
     @GetMapping("/status/{claimId}")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public Claim getClaim(
+    public ClaimResponse getClaim(
             @PathVariable Long claimId,
             Authentication authentication) {
 
@@ -48,12 +47,30 @@ public class ClaimController {
         return claimService.getClaim(claimId, userId);
     }
 
-    // ✅ Get all claims of user
     @GetMapping("/my")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public List<Claim> getMyClaims(Authentication authentication) {
+    public List<ClaimResponse> getMyClaims(Authentication authentication) {
 
         Long userId = Long.parseLong(authentication.getName());
         return claimService.getUserClaims(userId);
+    }
+
+    // ── Admin internal endpoint (called by admin-service via Feign) ─────────
+
+    @PutMapping("/admin/claims/{claimId}/review")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ClaimResponse reviewClaim(
+            @PathVariable Long claimId,
+            @Valid @RequestBody ClaimReviewRequest request) {
+
+        return claimService.reviewClaim(claimId, request);
+    }
+
+    // Add inside ClaimController, after the reviewClaim method:
+
+    @GetMapping("/admin/counts")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ClaimCountsResponse getClaimCounts() {
+        return claimService.getClaimCounts();
     }
 }

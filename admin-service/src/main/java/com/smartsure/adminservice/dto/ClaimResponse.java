@@ -1,14 +1,11 @@
-package com.smartsure.claims.dto;
+package com.smartsure.adminservice.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
-@AllArgsConstructor
 public class ClaimResponse {
-
     private Long claimId;
     private Long policyId;
     private String description;

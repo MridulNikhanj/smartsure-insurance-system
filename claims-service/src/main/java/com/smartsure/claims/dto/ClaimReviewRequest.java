@@ -1,4 +1,4 @@
-package com.smartsure.adminservice.dto;
+package com.smartsure.claims.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 public class ClaimReviewRequest {
 
-    @NotBlank(message = "status is required")
+    @NotBlank(message = "status is required (APPROVED or REJECTED)")
     private String status;
 
     private String remarks;

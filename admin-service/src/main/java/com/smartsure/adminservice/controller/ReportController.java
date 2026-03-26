@@ -1,7 +1,7 @@
-package com.smartsure.admin.controller;
+package com.smartsure.adminservice.controller;
 
-import com.smartsure.admin.dto.ReportResponse;
-import com.smartsure.admin.service.ReportService;
+import com.smartsure.adminservice.dto.ReportResponse;
+import com.smartsure.adminservice.service.ReportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

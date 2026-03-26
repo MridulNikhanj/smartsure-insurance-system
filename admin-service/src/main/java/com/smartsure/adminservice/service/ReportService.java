@@ -1,26 +1,31 @@
-package com.smartsure.admin.service;
+package com.smartsure.adminservice.service;
 
-import com.smartsure.admin.dto.ReportResponse;
+import com.smartsure.adminservice.client.ClaimsClient;
+import com.smartsure.adminservice.client.PolicyClient;
+import com.smartsure.adminservice.dto.ClaimCountsResponse;
+import com.smartsure.adminservice.dto.ReportResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class ReportService {
 
+    private final ClaimsClient claimsClient;
+    private final PolicyClient policyClient;
+
     public ReportResponse generateReport() {
-
-        // 🚧 TEMPORARY (dummy data)
-        // Later → fetch via Feign from Claims Service / Policy Service
-
-        long totalClaims = 100;
-        long approvedClaims = 60;
-        long rejectedClaims = 20;
-        long pendingClaims = 20;
+        ClaimCountsResponse counts = claimsClient.getCounts();
+        Long activePolicies = policyClient.getPolicyCount();
 
         return new ReportResponse(
-                totalClaims,
-                approvedClaims,
-                rejectedClaims,
-                pendingClaims
+                counts.getTotal(),
+                counts.getSubmitted(),
+                counts.getUnderReview(),
+                counts.getApproved(),
+                counts.getRejected(),
+                counts.getClosed(),
+                activePolicies
         );
     }
 }

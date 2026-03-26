@@ -1,7 +1,9 @@
-package com.smartsure.admin.controller;
+package com.smartsure.adminservice.controller;
 
-import com.smartsure.admin.dto.ClaimReviewRequest;
-import com.smartsure.admin.service.AdminClaimService;
+import com.smartsure.adminservice.dto.ClaimReviewRequest;
+import com.smartsure.adminservice.dto.ClaimResponse;
+import com.smartsure.adminservice.service.AdminClaimService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -15,9 +17,9 @@ public class AdminClaimController {
 
     @PutMapping("/{claimId}/review")
     @PreAuthorize("hasRole('ADMIN')")
-    public String reviewClaim(
+    public ClaimResponse reviewClaim(
             @PathVariable Long claimId,
-            @RequestBody ClaimReviewRequest request) {
+            @Valid @RequestBody ClaimReviewRequest request) {
 
         return claimService.reviewClaim(claimId, request);
     }

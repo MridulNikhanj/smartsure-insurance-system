@@ -1,7 +1,9 @@
 package com.smartsure.policy.controller;
 
+import com.smartsure.policy.dto.PolicyTypeResponse;
 import com.smartsure.policy.entity.PolicyType;
 import com.smartsure.policy.service.PolicyService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -17,16 +19,15 @@ public class AdminPolicyController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public PolicyType createPolicy(@RequestBody PolicyType policyType) {
+    public PolicyTypeResponse createPolicy(@Valid @RequestBody PolicyType policyType) {
         return policyService.createPolicyType(policyType);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public PolicyType updatePolicy(
+    public PolicyTypeResponse updatePolicy(
             @PathVariable Long id,
-            @RequestBody PolicyType policyType) {
-
+            @Valid @RequestBody PolicyType policyType) {
         return policyService.updatePolicyType(id, policyType);
     }
 
@@ -38,7 +39,7 @@ public class AdminPolicyController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public List<PolicyType> getAllPolicies() {
+    public List<PolicyTypeResponse> getAllPolicies() {
         return policyService.getAllPolicyTypes();
     }
 }

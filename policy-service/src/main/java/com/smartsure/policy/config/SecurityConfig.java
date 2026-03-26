@@ -1,8 +1,6 @@
 package com.smartsure.policy.config;
 
 import jakarta.servlet.Filter;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,7 +10,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 
-import java.io.IOException;
 import java.util.Collections;
 
 @Configuration
@@ -24,11 +21,21 @@ public class SecurityConfig {
 
         http.csrf(csrf -> csrf.disable());
 
-        http.addFilterBefore(headerAuthenticationFilter(),
-                org.springframework.security.web.authentication.
-                        preauth.AbstractPreAuthenticatedProcessingFilter.class);
+        http.addFilterBefore(
+                headerAuthenticationFilter(),
+                org.springframework.security.web.authentication
+                        .preauth.AbstractPreAuthenticatedProcessingFilter.class
+        );
 
-        http.authorizeHttpRequests(auth -> auth.anyRequest().authenticated());
+        http.authorizeHttpRequests(auth -> auth
+                .requestMatchers(
+                        "/v3/api-docs/**",
+                        "/swagger-ui/**",
+                        "/swagger-ui.html",
+                        "/actuator/**"
+                ).permitAll()
+                .anyRequest().authenticated()
+        );
 
         return http.build();
     }
@@ -39,21 +46,18 @@ public class SecurityConfig {
 
             HttpServletRequest httpRequest = (HttpServletRequest) request;
 
-            String role = httpRequest.getHeader("X-User-Role");
-            String email = httpRequest.getHeader("X-User-Email");
+            String role   = httpRequest.getHeader("X-User-Role");
             String userId = httpRequest.getHeader("X-User-Id");
 
-            if (role != null && email != null) {
-
+            if (role != null && userId != null) {
                 UsernamePasswordAuthenticationToken auth =
                         new UsernamePasswordAuthenticationToken(
-                                userId, // ✅ store userId here
+                                userId,
                                 null,
                                 Collections.singletonList(
-                                        new SimpleGrantedAuthority("ROLE_" + role)
+                                        new SimpleGrantedAuthority("ROLE_" + role.toUpperCase())
                                 )
                         );
-
                 org.springframework.security.core.context.SecurityContextHolder
                         .getContext()
                         .setAuthentication(auth);

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
+@Table(name = "claim_documents")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -15,7 +16,15 @@ public class ClaimDocument {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private Long claimId;
 
+    @Column(nullable = false)
+    private String fileName;
+
+    @Column(nullable = false)
     private String filePath;
+
+    @Column(nullable = false)
+    private String contentType;
 }

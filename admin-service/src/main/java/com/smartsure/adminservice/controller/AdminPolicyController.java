@@ -1,10 +1,14 @@
-package com.smartsure.admin.controller;
+package com.smartsure.adminservice.controller;
 
-import com.smartsure.admin.dto.PolicyRequest;
-import com.smartsure.admin.service.AdminPolicyService;
+import com.smartsure.adminservice.dto.PolicyRequest;
+import com.smartsure.adminservice.dto.PolicyTypeResponse;
+import com.smartsure.adminservice.service.AdminPolicyService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin/policies")
@@ -15,14 +19,15 @@ public class AdminPolicyController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public String createPolicy(@RequestBody PolicyRequest request) {
+    public PolicyTypeResponse createPolicy(@Valid @RequestBody PolicyRequest request) {
         return policyService.createPolicy(request);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public String updatePolicy(@PathVariable Long id,
-                               @RequestBody PolicyRequest request) {
+    public PolicyTypeResponse updatePolicy(
+            @PathVariable Long id,
+            @Valid @RequestBody PolicyRequest request) {
         return policyService.updatePolicy(id, request);
     }
 
@@ -30,5 +35,11 @@ public class AdminPolicyController {
     @PreAuthorize("hasRole('ADMIN')")
     public String deletePolicy(@PathVariable Long id) {
         return policyService.deletePolicy(id);
+    }
+
+    @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<PolicyTypeResponse> getAllPolicies() {
+        return policyService.getAllPolicies();
     }
 }
