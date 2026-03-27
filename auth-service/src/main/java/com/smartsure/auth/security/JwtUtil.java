@@ -19,7 +19,7 @@ public class JwtUtil {
 
     private SecretKey key;
 
-    private final long jwtExpirationMs = 3600000;
+    private final long jwtExpirationMs = 86400000;
 
     @PostConstruct
     public void init() {

@@ -20,8 +20,10 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final EmailService emailService;
 
     public String register(RegisterRequest request) {
+
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new UserAlreadyExistsException("User already exists");
         }
@@ -36,6 +38,10 @@ public class AuthService {
                 .build();
 
         userRepository.save(user);
+
+        // Send welcome email after successful registration
+        emailService.sendWelcomeEmail(request.getEmail(), request.getName());
+
         return "User registered successfully";
     }
 
@@ -49,7 +55,7 @@ public class AuthService {
         }
 
         String token = jwtUtil.generateToken(
-                user.getId(),        // ✅ NEW
+                user.getId(),
                 user.getEmail(),
                 user.getRole().name()
         );

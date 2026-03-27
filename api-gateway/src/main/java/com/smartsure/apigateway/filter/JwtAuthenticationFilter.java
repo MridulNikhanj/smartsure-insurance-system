@@ -12,22 +12,34 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
 
     private final JwtUtil jwtUtil;
 
+    private static final List<String> PUBLIC_PATHS = List.of(
+            "/api/auth/login",
+            "/api/auth/register",
+            "/swagger-ui",
+            "/swagger-ui.html",
+            "/v3/api-docs",
+            "/webjars",
+            "/actuator"
+    );
+
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
 
         String path = exchange.getRequest().getURI().getPath();
 
-        if (!path.startsWith("/api/")) {
+        if (isPublicPath(path)) {
             return chain.filter(exchange);
         }
 
-        if (path.contains("/api/auth/login") || path.contains("/api/auth/register")) {
+        if (!path.startsWith("/api/")) {
             return chain.filter(exchange);
         }
 
@@ -47,19 +59,23 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
 
         Claims claims = jwtUtil.extractAllClaims(token);
 
-        String email = claims.getSubject();
-        String role = claims.get("role", String.class);
-        Long userId = claims.get("userId", Long.class); // ✅ NEW
+        String email  = claims.getSubject();
+        String role   = claims.get("role", String.class);
+        Long   userId = claims.get("userId", Long.class);
 
         ServerWebExchange modifiedExchange = exchange.mutate()
                 .request(builder -> builder
                         .header("X-User-Email", email)
                         .header("X-User-Role", role)
-                        .header("X-User-Id", String.valueOf(userId)) // ✅ NEW
+                        .header("X-User-Id", String.valueOf(userId))
                 )
                 .build();
 
         return chain.filter(modifiedExchange);
+    }
+
+    private boolean isPublicPath(String path) {
+        return PUBLIC_PATHS.stream().anyMatch(path::startsWith);
     }
 
     private Mono<Void> onError(ServerWebExchange exchange, HttpStatus status) {
