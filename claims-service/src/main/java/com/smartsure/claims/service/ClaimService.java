@@ -42,7 +42,7 @@ public class ClaimService {
             "image/jpg"
     );
 
-    // ═══════════════════════ FILE UPLOAD ═══════════════════════
+
 
     public DocumentUploadResponse uploadDocument(MultipartFile file) throws Exception {
 
@@ -52,7 +52,6 @@ public class ClaimService {
                     "Invalid file type. Only PDF, JPEG, and PNG are allowed.");
         }
 
-        // Absolute path under user's home directory — works on Windows and Linux
         String baseUploadDir = System.getProperty("user.home") + File.separator + "smartsure-uploads";
 
         Path uploadPath = Paths.get(baseUploadDir);
@@ -60,7 +59,6 @@ public class ClaimService {
             Files.createDirectories(uploadPath);
         }
 
-        // Sanitize filename — strip special characters that break Windows paths
         String originalFilename = file.getOriginalFilename();
         if (originalFilename == null) originalFilename = "file";
         String sanitizedFilename = originalFilename.replaceAll("[^a-zA-Z0-9._-]", "_");
@@ -68,7 +66,7 @@ public class ClaimService {
         String storedFileName = System.currentTimeMillis() + "_" + sanitizedFilename;
         Path   targetPath     = uploadPath.resolve(storedFileName);
 
-        // Files.copy avoids the Windows cross-device move problem with transferTo()
+
         try (InputStream inputStream = file.getInputStream()) {
             Files.copy(inputStream, targetPath, StandardCopyOption.REPLACE_EXISTING);
         }
@@ -91,7 +89,7 @@ public class ClaimService {
         );
     }
 
-    // ═══════════════════════ CUSTOMER ═══════════════════════
+
 
     public ClaimResponse initiateClaim(Long userId, ClaimRequest request) {
 
@@ -136,7 +134,7 @@ public class ClaimService {
                 .collect(Collectors.toList());
     }
 
-    // ═══════════════════════ ADMIN (internal endpoint) ═══════════════════════
+
 
     public ClaimResponse reviewClaim(Long claimId, ClaimReviewRequest request) {
 
@@ -182,7 +180,7 @@ public class ClaimService {
         return new ClaimCountsResponse(total, submitted, underReview, approved, rejected, closed);
     }
 
-    // ═══════════════════════ HELPERS ═══════════════════════
+
 
     private ClaimResponse toResponse(Claim c) {
         return new ClaimResponse(

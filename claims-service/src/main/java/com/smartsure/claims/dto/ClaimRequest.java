@@ -13,6 +13,5 @@ public class ClaimRequest {
     @NotBlank(message = "description is required")
     private String description;
 
-    // Optional: document ID returned from /api/claims/upload
     private Long documentId;
 }

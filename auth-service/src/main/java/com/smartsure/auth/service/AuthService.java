@@ -39,7 +39,6 @@ public class AuthService {
 
         userRepository.save(user);
 
-        // Send welcome email after successful registration
         emailService.sendWelcomeEmail(request.getEmail(), request.getName());
 
         return "User registered successfully";

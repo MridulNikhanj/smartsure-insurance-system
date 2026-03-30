@@ -31,3 +31,6 @@ public class PolicyType {
     @Column(nullable = false)
     private Integer durationInMonths;
 }
+
+
+

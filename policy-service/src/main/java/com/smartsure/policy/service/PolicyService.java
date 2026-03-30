@@ -25,7 +25,6 @@ public class PolicyService {
     private final PolicyRepository policyRepository;
     private final PolicyTypeRepository policyTypeRepository;
 
-    // ═══════════════════════ CUSTOMER ═══════════════════════
 
     public PolicyResponse purchasePolicy(Long userId, PurchasePolicyRequest request) {
 
@@ -72,7 +71,6 @@ public class PolicyService {
                 .collect(Collectors.toList());
     }
 
-    // ═══════════════════════ ADMIN ═══════════════════════
 
     public PolicyTypeResponse createPolicyType(PolicyType policyType) {
         PolicyType saved = policyTypeRepository.save(policyType);
@@ -108,13 +106,11 @@ public class PolicyService {
     }
 
 
-    // Add to PolicyService:
     public Long getActivePolicyCount() {
         return policyRepository.countByStatus(PolicyStatus.ACTIVE);
     }
 
 
-    // ═══════════════════════ HELPERS ═══════════════════════
 
     private PolicyResponse toResponse(Policy p, String typeName) {
         return new PolicyResponse(

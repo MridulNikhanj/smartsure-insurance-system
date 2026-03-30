@@ -11,3 +11,5 @@ public class DocumentUploadResponse {
     private String contentType;
     private String message;
 }
+
+

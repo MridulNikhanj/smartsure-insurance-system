@@ -68,7 +68,6 @@ class AuthServiceTest {
                 .build();
     }
 
-    // ─── REGISTER ───────────────────────────────────────────
 
     @Test
     void register_Success() {
@@ -79,7 +78,6 @@ class AuthServiceTest {
 
         assertEquals("User registered successfully", result);
         verify(userRepository, times(1)).save(any(User.class));
-        // Verify welcome email was sent after successful registration
         verify(emailService, times(1))
                 .sendWelcomeEmail("rahul@example.com", "Rahul Sharma");
     }
@@ -92,11 +90,8 @@ class AuthServiceTest {
                 () -> authService.register(registerRequest));
 
         verify(userRepository, never()).save(any());
-        // Email must NOT be sent if registration fails
         verify(emailService, never()).sendWelcomeEmail(anyString(), anyString());
     }
-
-    // ─── LOGIN ───────────────────────────────────────────────
 
     @Test
     void login_Success() {

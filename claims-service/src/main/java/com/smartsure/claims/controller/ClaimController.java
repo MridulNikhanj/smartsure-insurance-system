@@ -18,7 +18,6 @@ public class ClaimController {
 
     private final ClaimService claimService;
 
-    // ── Customer endpoints ──────────────────────────────────────────────────
 
     @PostMapping("/upload")
     @PreAuthorize("hasRole('CUSTOMER')")
@@ -55,7 +54,7 @@ public class ClaimController {
         return claimService.getUserClaims(userId);
     }
 
-    // ── Admin internal endpoint (called by admin-service via Feign) ─────────
+
 
     @PutMapping("/admin/claims/{claimId}/review")
     @PreAuthorize("hasRole('ADMIN')")
@@ -66,7 +65,7 @@ public class ClaimController {
         return claimService.reviewClaim(claimId, request);
     }
 
-    // Add inside ClaimController, after the reviewClaim method:
+
 
     @GetMapping("/admin/counts")
     @PreAuthorize("hasRole('ADMIN')")

@@ -46,7 +46,6 @@ public class PolicyController {
         return policyService.getPolicy(policyId, userId);
     }
 
-    // Add to PolicyController (no role restriction — called internally by admin-service Feign)
     @GetMapping("/admin/count")
     @PreAuthorize("hasRole('ADMIN')")
     public Long getPolicyCount() {
